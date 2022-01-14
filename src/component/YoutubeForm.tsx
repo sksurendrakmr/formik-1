@@ -63,52 +63,59 @@ import { useFormik } from "formik";
  *
  */
 
-type Errors = {
+type FromFields = {
   name: string;
   email: string;
   channel: string;
 };
+
+const initialValues = {
+  name: "",
+  email: "",
+  channel: "",
+};
+
+const onSubmit = (values: FromFields) => {
+  console.log("Form data", values);
+};
+
+/**This validate function is a function that must satisfy some
+ *conditions for formik to work as inteded.
+ *
+ * The conditions are:-
+ * 1) This function must return an object.
+ * 2) The keys of the errors object should be similar to that of the
+ *    values object (i.e. this keys will correspond to the name attribute of the three form fields).
+ * 3)The value of these keys should be string indicating what the error message
+ *   should be for that particular field.
+ */
+const validate = (values: FromFields) => {
+  const { name, email, channel } = values;
+  let errors: FromFields = {
+    name: "",
+    email: "",
+    channel: "",
+  };
+
+  if (!name) {
+    errors.name = "Required";
+  }
+  if (!email) {
+    errors.email = "Required";
+  }
+  if (!channel) {
+    errors.channel = "Required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+    errors.email = "Invalid email format";
+  }
+  return errors;
+};
+
 const YoutubeForm = () => {
   const { handleChange, values, handleSubmit } = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      channel: "",
-    },
-    onSubmit: (formValues) => {
-      console.log("Form data", formValues);
-    },
-    validate: (formValues) => {
-      const { name, email, channel } = values;
-      let errors: Errors = {
-        name: "",
-        email: "",
-        channel: "",
-      };
-      /**This validate function is a function that must satisfy some
-       *conditions for formik to work as inteded.
-       *
-       * The conditions are:-
-       * 1) This function must return an object.
-       * 2) The keys of the errors object should be similar to that of the
-       *    values object (i.e. this keys will correspond to the name attribute of the three form fields).
-       * 3)The value of these keys should be string indicating what the error message
-       *   should be for that particular field.
-       */
-
-      if (!name) {
-        errors.name = "Required";
-      }
-      if (!email) {
-        errors.email = "Required";
-      }
-      if (!channel) {
-        errors.channel = "Required";
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
-        errors.email = "Invalid email format";
-      }
-      return errors;
-    },
+    initialValues,
+    onSubmit,
+    validate,
   });
 
   /**
