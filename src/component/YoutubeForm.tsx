@@ -102,17 +102,17 @@ const validate = (values: FromFields) => {
   }
   if (!email) {
     errors.email = "Required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+    errors.email = "Invalid email format";
   }
   if (!channel) {
     errors.channel = "Required";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
-    errors.email = "Invalid email format";
   }
   return errors;
 };
 
 const YoutubeForm = () => {
-  const { handleChange, values, handleSubmit } = useFormik({
+  const { handleChange, values, handleSubmit, errors } = useFormik({
     initialValues,
     onSubmit,
     validate,
@@ -122,37 +122,49 @@ const YoutubeForm = () => {
    * values ==> An Object provided by formik. This object always reflects
    *            the state of the form.
    * handleChange => It's a formik helper to update the values object.
+   *
+   * errors => It's an object with key-values pairs for each of the form fields
+   *           which has error string message.
    */
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={values.name}
-          onChange={handleChange}
-        />
+        <div>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+          />
+          {errors.name && <div className="error">{errors.name}</div>}
+        </div>
 
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={values.email}
-          onChange={handleChange}
-        />
+        <div>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+          />
+          {errors.email && <div className="error">{errors.email}</div>}
+        </div>
 
-        <label htmlFor="channel">Channel</label>
-        <input
-          type="text"
-          id="channel"
-          name="channel"
-          value={values.channel}
-          onChange={handleChange}
-        />
+        <div>
+          <label htmlFor="channel">Channel</label>
+          <input
+            type="text"
+            id="channel"
+            name="channel"
+            value={values.channel}
+            onChange={handleChange}
+          />
+          {errors.channel && <div className="error">{errors.channel}</div>}
+        </div>
 
         <button type="submit">Submit</button>
       </form>
