@@ -111,20 +111,38 @@ const validate = (values: FromFields) => {
   return errors;
 };
 
+/**
+ * Lecture 9
+ * How do we keep track of the fields the user has interacted with.
+ * (How do we keep track of the visited fields in a form)
+ *
+ * If we have to track whether a form fields has been visited,
+ * we have to add onBlur prop on the form input element.
+ * And in this prop, we have to pass handleOnBlur method provided by
+ * formik.
+ *
+ * Where does formik store the information about visited fields??
+ * It stores it in an object called touched. This object has the same shape
+ * as the values object.
+ */
 const YoutubeForm = () => {
-  const { handleChange, values, handleSubmit, errors } = useFormik({
-    initialValues,
-    onSubmit,
-    validate,
-  });
+  const { handleChange, values, handleSubmit, errors, handleBlur, touched } =
+    useFormik({
+      initialValues,
+      onSubmit,
+      validate,
+    });
 
   /**
    * values ==> An Object provided by formik. This object always reflects
    *            the state of the form.
-   * handleChange => It's a formik helper to update the values object.
+   * handleChange, handleBlur => It's a formik helper to update the values object.
    *
    * errors => It's an object with key-values pairs for each of the form fields
    *           which has error string message.
+   *
+   * toched -> Object that store information about wheather a field is visited or not.
+   *            If its has been visited, the property would be present with a value of true.
    */
 
   return (
@@ -138,6 +156,7 @@ const YoutubeForm = () => {
             name="name"
             value={values.name}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           {errors.name && <div className="error">{errors.name}</div>}
         </div>
@@ -150,6 +169,7 @@ const YoutubeForm = () => {
             name="email"
             value={values.email}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
@@ -162,6 +182,7 @@ const YoutubeForm = () => {
             name="channel"
             value={values.channel}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           {errors.channel && <div className="error">{errors.channel}</div>}
         </div>
