@@ -27,7 +27,7 @@ import { useFormik } from "formik";
  *      1) initialValues properties which is an object and it contains
  *         the initial values for all our form fields.
  *      2) The properties for initialValues (in our case name, email and channel)
- *         corresponds to the name attribute of the individual fields.
+ *         must corresponds to the name attribute of the individual fields.
  *
  *
  * Step 2: We need to add the onChange and the value prop for each of the
@@ -35,14 +35,28 @@ import { useFormik } from "formik";
  *         react by formik.
  */
 
+/**
+ *How to get hold of form state when the user clicks on the submit button?
+ *Step 1: We need to specify the onSubmit handler on the form tag.
+ *        This is going to be equal to handleSubmit method provided by formik.
+ *
+ *        By doing above step, formik will automatically tied the onSubmit method
+ *        to the submit event.
+ *
+ * Step 2: onSubmit method that we are passing as an argument in useFromik hook
+ *         is automatically receives the form state as its argument.
+ */
+
 const YoutubeForm = () => {
-  const { handleChange, values } = useFormik({
+  const { handleChange, values, handleSubmit } = useFormik({
     initialValues: {
       name: "",
       email: "",
       channel: "",
     },
-    onSubmit: () => {},
+    onSubmit: (formValues) => {
+      console.log("Form data", formValues);
+    },
   });
 
   /**
@@ -53,7 +67,7 @@ const YoutubeForm = () => {
 
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
         <input
           type="text"
@@ -81,7 +95,7 @@ const YoutubeForm = () => {
           onChange={handleChange}
         />
 
-        <button>Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </>
   );
