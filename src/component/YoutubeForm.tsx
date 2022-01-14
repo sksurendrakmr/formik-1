@@ -158,7 +158,9 @@ const YoutubeForm = () => {
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          {errors.name && <div className="error">{errors.name}</div>}
+          {touched.name && errors.name && (
+            <div className="error">{errors.name}</div>
+          )}
         </div>
 
         <div>
@@ -171,7 +173,9 @@ const YoutubeForm = () => {
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          {errors.email && <div className="error">{errors.email}</div>}
+          {touched.email && errors.email && (
+            <div className="error">{errors.email}</div>
+          )}
         </div>
 
         <div>
@@ -184,7 +188,9 @@ const YoutubeForm = () => {
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          {errors.channel && <div className="error">{errors.channel}</div>}
+          {touched.channel && errors.channel && (
+            <div className="error">{errors.channel}</div>
+          )}
         </div>
 
         <button type="submit">Submit</button>
