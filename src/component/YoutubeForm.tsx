@@ -47,6 +47,27 @@ import { useFormik } from "formik";
  *         is automatically receives the form state as its argument.
  */
 
+/**
+ * The validation rules that we are going to apply for this form fields.
+ * 1) All fields are required and has to be filled.
+ * 2) Proper email format
+ *
+ *
+ *
+ * Formik let us define a validation function and that validation function
+ * needs to be assigned to a property called validate in the object that
+ * we pass to the useFormik.
+ *
+ * vaidate property that we have useFormik object argument, receives
+ * the values object as its argument.
+ *
+ */
+
+type Errors = {
+  name: string;
+  email: string;
+  channel: string;
+};
 const YoutubeForm = () => {
   const { handleChange, values, handleSubmit } = useFormik({
     initialValues: {
@@ -56,6 +77,37 @@ const YoutubeForm = () => {
     },
     onSubmit: (formValues) => {
       console.log("Form data", formValues);
+    },
+    validate: (formValues) => {
+      const { name, email, channel } = values;
+      let errors: Errors = {
+        name: "",
+        email: "",
+        channel: "",
+      };
+      /**This validate function is a function that must satisfy some
+       *conditions for formik to work as inteded.
+       *
+       * The conditions are:-
+       * 1) This function must return an object.
+       * 2) The keys of the errors object should be similar to that of the
+       *    values object (i.e. this keys will correspond to the name attribute of the three form fields).
+       * 3)The value of these keys should be string indicating what the error message
+       *   should be for that particular field.
+       */
+
+      if (!name) {
+        errors.name = "Required";
+      }
+      if (!email) {
+        errors.email = "Required";
+      }
+      if (!channel) {
+        errors.channel = "Required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+        errors.email = "Invalid email format";
+      }
+      return errors;
     },
   });
 
