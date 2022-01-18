@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-import { Formik } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 /**
@@ -153,6 +153,20 @@ const onSubmit = (values: FromFields) => {
  * (provided by formik library i.e. Form, Field,ErrorMessage)
  */
 
+/**
+ * Lecture - 14
+ * Form Component
+ * Step 1 - Import From from formik
+ * Step 2 - Replace the html form element with Form component
+ * Step 3 - Remove onSubmit prop
+ *
+ * Because From component is a small wrapper around the HTML form element
+ * that automatically hooks into formik handleSumit method.
+ *
+ * Thus, Form component helps us by automatically linking the onSubmit
+ * method to our form submitEvent.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -178,7 +192,7 @@ const YoutubeForm = () => {
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      <form onSubmit={handleSubmit}>
+      <Form>
         <label htmlFor="name">Name</label>
         <div>
           <input
@@ -219,7 +233,7 @@ const YoutubeForm = () => {
         </div>
 
         <button type="submit">Submit</button>
-      </form>
+      </Form>
     </Formik>
   );
 };
