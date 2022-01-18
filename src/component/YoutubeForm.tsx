@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 /**
@@ -186,6 +186,28 @@ const onSubmit = (values: FromFields) => {
  * 3) By default field will render an input element which is what YoutubeForm had as well.
  */
 
+/**
+ * Lecture - 16
+ * ErrorMessage Component
+ *
+ * At the moment for displaying error messages we check if the field
+ * has been visited and check if the error exists and if does, we render the error.
+ *
+ * It's again seems like a pattern across different form fields and
+ * when there is a pattern formik wants to help us out.
+ *
+ * Step 1 - Import Error Message from Fromik
+ * Step 2- Replace the block of code rendering the block message with
+ *         the ErrorMessage Component.
+ * Step 3 - Pass in a name prop which is equal to the name attribute on
+ *          the Field Component.
+ *
+ *
+ * ErrorMessage Component behind the scene will take care for rendering
+ * the error message for particular field indicated by the name prop
+ * only if the field has been visited and if the error exists.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -203,25 +225,19 @@ const YoutubeForm = () => {
         <label htmlFor="name">Name</label>
         <div>
           <Field type="text" id="name" name="name" />
-          {touched.name && errors.name && (
-            <div className="error">{errors.name}</div>
-          )}
+          <ErrorMessage name="name" />
         </div>
 
         <div>
           <label htmlFor="email">Email</label>
           <Field type="email" id="email" name="email" />
-          {touched.email && errors.email && (
-            <div className="error">{errors.email}</div>
-          )}
+          <ErrorMessage name="email" />
         </div>
 
         <div>
           <label htmlFor="channel">Channel</label>
           <Field type="text" id="channel" name="channel" />
-          {touched.channel && errors.channel && (
-            <div className="error">{errors.channel}</div>
-          )}
+          <ErrorMessage name="channel" />
         </div>
 
         <button type="submit">Submit</button>
