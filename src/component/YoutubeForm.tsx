@@ -2,6 +2,7 @@ import React from "react";
 import "../App.css";
 
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 /**
  * In this component we create a form and
@@ -125,12 +126,32 @@ const validate = (values: FromFields) => {
  * It stores it in an object called touched. This object has the same shape
  * as the values object.
  */
+
+/**
+ * Lecture - 11
+ * An alternate way of writing validation rules with formik.
+ * This alternate way depends on a library called YUP (Mainly used for object schema validation).
+ *
+ * Step 1 - we need to write a validation schema object.
+ *
+ * Yup.object() -> Here inside object, as argument we pass in an object which contains the rules
+ * for each of the form fields.
+ *
+ * Step 2 - Pass this schema (in our case validationSchema) in useFromik hook.
+ */
+
+const validationSchema = Yup.object({
+  name: Yup.string().required("Required"),
+  email: Yup.string().email("Invalid email format").required("Required"),
+  channel: Yup.string().required("Required"),
+});
+
 const YoutubeForm = () => {
   const { handleChange, values, handleSubmit, errors, handleBlur, touched } =
     useFormik({
       initialValues,
       onSubmit,
-      validate,
+      validationSchema,
     });
 
   /**
