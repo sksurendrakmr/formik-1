@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 /**
@@ -167,6 +167,25 @@ const onSubmit = (values: FromFields) => {
  * method to our form submitEvent.
  */
 
+/**
+ * Field Component
+ * Simplifies the code for a form field.
+ *
+ * Right now, we are passing getFieldProps helper method passing in
+ * the name attribute value. Formik seen this as a common pattern which can
+ * be abstracted and provides us with the Field component to simplify the code.
+ *
+ *
+ * Step 1 - Import field from formik.
+ * Step 2 - Replace each input tag with the Field component.
+ * Step 3 - Get rid of getFieldProp Helper method from each of the field.
+ *
+ * Field component does three things :-
+ * 1) It will behind the scenes hook up inputs to the top-level Formik component.
+ * 2) It uses the name attribute to match up with the formik state.
+ * 3) By default field will render an input element which is what YoutubeForm had as well.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -174,18 +193,6 @@ const validationSchema = Yup.object({
 });
 
 const YoutubeForm = () => {
-  /**
-   * values ==> An Object provided by formik. This object always reflects
-   *            the state of the form.
-   * handleChange, handleBlur => It's a formik helper to update the values object.
-   *
-   * errors => It's an object with key-values pairs for each of the form fields
-   *           which has error string message.
-   *
-   * toched -> Object that store information about wheather a field is visited or not.
-   *            If its has been visited, the property would be present with a value of true.
-   */
-
   return (
     <Formik
       initialValues={initialValues}
@@ -195,12 +202,7 @@ const YoutubeForm = () => {
       <Form>
         <label htmlFor="name">Name</label>
         <div>
-          <input
-            type="text"
-            id="name"
-            // name="name"
-            {...getFieldProps("name")}
-          />
+          <Field type="text" id="name" name="name" />
           {touched.name && errors.name && (
             <div className="error">{errors.name}</div>
           )}
@@ -208,12 +210,7 @@ const YoutubeForm = () => {
 
         <div>
           <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            // name="email"
-            {...getFieldProps("email")}
-          />
+          <Field type="email" id="email" name="email" />
           {touched.email && errors.email && (
             <div className="error">{errors.email}</div>
           )}
@@ -221,12 +218,7 @@ const YoutubeForm = () => {
 
         <div>
           <label htmlFor="channel">Channel</label>
-          <input
-            type="text"
-            id="channel"
-            // name="channel"
-            {...getFieldProps("channel")}
-          />
+          <Field type="text" id="channel" name="channel" />
           {touched.channel && errors.channel && (
             <div className="error">{errors.channel}</div>
           )}
