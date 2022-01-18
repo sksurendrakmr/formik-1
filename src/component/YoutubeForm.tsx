@@ -1,7 +1,7 @@
 import React from "react";
 import "../App.css";
 
-import { useFormik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 
 /**
@@ -120,6 +120,39 @@ const onSubmit = (values: FromFields) => {
  *
  */
 
+/**
+ * Lecture - 13
+ * Formik components
+ * In previous lecture, we have made use of getFieldProps helper method
+ * to reduce some boilerplate code.
+ *
+ * But still, we have to manully pass each input the getFieldProps helper method.
+ *
+ * To save us more time, formik provides a few components that implicitly
+ * uses react context to make our code less verbose.
+ *
+ * We can make use of four components that formik provides :
+ * 1. Formik
+ * 2. Form
+ * 3. Field
+ * 4. ErrorMessage
+ *
+ *
+ * Steps to Implement Fromik component
+ *
+ * Fromik component is a replacement of useFromik hook.
+ * The argument which we passed to useFromik as an object will be
+ * passed in as props to the formik component.
+ *
+ * step 1 - import Formik instead of useFormik.
+ * Step 2 - Remove the call of useFromik
+ * Step 3 - wrap our entire form with Fromik component and pass the required props
+ *
+ * This Formik component behaves as a context provider component that provides
+ * the different properties and helper methods for other three components
+ * (provided by formik library i.e. Form, Field,ErrorMessage)
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -127,20 +160,6 @@ const validationSchema = Yup.object({
 });
 
 const YoutubeForm = () => {
-  const {
-    handleChange,
-    values,
-    handleSubmit,
-    errors,
-    handleBlur,
-    touched,
-    getFieldProps,
-  } = useFormik({
-    initialValues,
-    onSubmit,
-    validationSchema,
-  });
-
   /**
    * values ==> An Object provided by formik. This object always reflects
    *            the state of the form.
@@ -154,7 +173,11 @@ const YoutubeForm = () => {
    */
 
   return (
-    <>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
         <div>
@@ -197,7 +220,7 @@ const YoutubeForm = () => {
 
         <button type="submit">Submit</button>
       </form>
-    </>
+    </Formik>
   );
 };
 
