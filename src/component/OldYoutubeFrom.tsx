@@ -80,6 +80,38 @@ const onSubmit = (values: FromFields) => {
   console.log("Form data", values);
 };
 
+/**This validate function is a function that must satisfy some
+ *conditions for formik to work as inteded.
+ *
+ * The conditions are:-
+ * 1) This function must return an object.
+ * 2) The keys of the errors object should be similar to that of the
+ *    values object (i.e. this keys will correspond to the name attribute of the three form fields).
+ * 3)The value of these keys should be string indicating what the error message
+ *   should be for that particular field.
+ */
+const validate = (values: FromFields) => {
+  const { name, email, channel } = values;
+  let errors: FromFields = {
+    name: "",
+    email: "",
+    channel: "",
+  };
+
+  if (!name) {
+    errors.name = "Required";
+  }
+  if (!email) {
+    errors.email = "Required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+    errors.email = "Invalid email format";
+  }
+  if (!channel) {
+    errors.channel = "Required";
+  }
+  return errors;
+};
+
 /**
  * Lecture 9
  * How do we keep track of the fields the user has interacted with.
@@ -108,38 +140,19 @@ const onSubmit = (values: FromFields) => {
  * Step 2 - Pass this schema (in our case validationSchema) in useFromik hook.
  */
 
-/**
- * Lecture - 12
- * In all the form fields, three props are sort of
- * similar across the fields.
- * i.e. onChange, onBlur, value
- *
- * So formik provides an alternate way for reducing this boilerplate code for every field in this form.
- * Formik provides us a helper method called getFieldProps which behind the scene
- * add these props for us
- *
- */
-
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
   channel: Yup.string().required("Required"),
 });
 
-const YoutubeForm = () => {
-  const {
-    handleChange,
-    values,
-    handleSubmit,
-    errors,
-    handleBlur,
-    touched,
-    getFieldProps,
-  } = useFormik({
-    initialValues,
-    onSubmit,
-    validationSchema,
-  });
+const OldYoutubeForm = () => {
+  const { handleChange, values, handleSubmit, errors, handleBlur, touched } =
+    useFormik({
+      initialValues,
+      onSubmit,
+      validationSchema,
+    });
 
   /**
    * values ==> An Object provided by formik. This object always reflects
@@ -161,8 +174,10 @@ const YoutubeForm = () => {
           <input
             type="text"
             id="name"
-            // name="name"
-            {...getFieldProps("name")}
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
           {touched.name && errors.name && (
             <div className="error">{errors.name}</div>
@@ -174,8 +189,10 @@ const YoutubeForm = () => {
           <input
             type="email"
             id="email"
-            // name="email"
-            {...getFieldProps("email")}
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
           {touched.email && errors.email && (
             <div className="error">{errors.email}</div>
@@ -187,8 +204,10 @@ const YoutubeForm = () => {
           <input
             type="text"
             id="channel"
-            // name="channel"
-            {...getFieldProps("channel")}
+            name="channel"
+            value={values.channel}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
           {touched.channel && errors.channel && (
             <div className="error">{errors.channel}</div>
@@ -201,4 +220,4 @@ const YoutubeForm = () => {
   );
 };
 
-export default YoutubeForm;
+export default OldYoutubeForm;
