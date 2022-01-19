@@ -3,6 +3,7 @@ import "../App.css";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { TextError } from "./TextError";
 
 /**
  * In this component we create a form and
@@ -249,6 +250,25 @@ const onSubmit = (values: FromFields) => {
  *
  */
 
+/**
+ * Lecture -19
+ * ErrorMessage Component accepts a name props and renders the error message
+ * for that particular field if the field has been visited and an error message
+ * exists for that fields.
+ *
+ * If we inspect that element, we observe that that is plain text (it is not wrapped in HTML element)
+ *
+ * To inform the ErrorMessage component to wrap the error message with as HTML
+ * element, we need to use component prop.
+ * We can also wrap the error message within custom react component.
+ *
+ * We will create a component and render the error message text as red color
+ * and then pass the component in the component props of ErrorMessage component.
+ *
+ *
+ * An alternative of this is to use renderProps pattern.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -266,19 +286,21 @@ const YoutubeForm = () => {
         <label htmlFor="name">Name</label>
         <div>
           <Field type="text" id="name" name="name" />
-          <ErrorMessage name="name" />
+          <ErrorMessage name="name" component="div" />
         </div>
 
         <div>
           <label htmlFor="email">Email</label>
           <Field type="email" id="email" name="email" />
-          <ErrorMessage name="email" />
+          <ErrorMessage name="email" component={TextError} />
         </div>
 
         <div>
           <label htmlFor="channel">Channel</label>
           <Field type="text" id="channel" name="channel" />
-          <ErrorMessage name="channel" />
+          <ErrorMessage name="channel">
+            {(errorMsg: string) => <div className="error">{errorMsg}</div>}
+          </ErrorMessage>
         </div>
 
         <div>
