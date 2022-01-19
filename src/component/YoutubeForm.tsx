@@ -75,6 +75,7 @@ const initialValues = {
   email: "",
   channel: "",
   comments: "",
+  address: "",
 };
 
 const onSubmit = (values: FromFields) => {
@@ -237,6 +238,14 @@ const onSubmit = (values: FromFields) => {
  *    It will give more fine-grined control over the rendering and
  *    behaviour of our form field.
  *
+ *    Let's say, we need to render another input element to collect
+ *    the user's address.
+ *
+ * With renderprops pattern, we use function as children to the component.
+ *
+ * When renderProps pattern??
+ * When we want to use custom components in our form and we want them
+ * to be hooked in the formik.
  *
  */
 
@@ -276,6 +285,24 @@ const YoutubeForm = () => {
           <label htmlFor="comments">Comments</label>
           <Field as="textarea" type="text" id="comments" name="comments" />
           <ErrorMessage name="comments" />
+        </div>
+
+        <div>
+          <label htmlFor="address">Address</label>
+          <Field type="text" id="address" name="address">
+            {(props: any) => {
+              console.log(props);
+              // this funtion will return JSX, in our case an input element for address
+              const { field, form, meta } = props;
+              return (
+                <div>
+                  <input type="text" id="address" {...field} />
+                  {meta.touched && meta.error && <div>{meta.error}</div>}
+                </div>
+              );
+            }}
+          </Field>
+          <ErrorMessage name="address" />
         </div>
 
         <button type="submit">Submit</button>
