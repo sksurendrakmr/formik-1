@@ -74,6 +74,7 @@ const initialValues = {
   name: "",
   email: "",
   channel: "",
+  comments: "",
 };
 
 const onSubmit = (values: FromFields) => {
@@ -208,6 +209,37 @@ const onSubmit = (values: FromFields) => {
  * only if the field has been visited and if the error exists.
  */
 
+/**
+ * Lecture 18
+ * In Field component, by default it renders a HTML input element.
+ * Behind the scene, it hooks up the input element to formik i.e.
+ * it's hooks up handleChange, handleBlur and the value of the form fields.
+ *
+ * 1) The Field Component will pass through any additional props that we
+ *   specify to the input element.
+ * 2) Ability to render a different element other than the input element.
+ *    To instruct formik to render different element (other than input element),
+ *    we simply need to add 'as' props and pass the elementName (E.g. textarea)
+ *
+ * The 'as' props can only accept value either input or textarea or select
+ * or a custom react component as well.
+ * It's default value is input.
+ *
+ * Instead of 'as' props, we can also use 'component' props.
+ *
+ * The internal implementation of component and as props are slightly
+ * different though.
+ *
+ * Summary
+ * Field component accepts 'as' props to decide what element to render.
+ *
+ * 3) renderprops pattern
+ *    It will give more fine-grined control over the rendering and
+ *    behaviour of our form field.
+ *
+ *
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -238,6 +270,12 @@ const YoutubeForm = () => {
           <label htmlFor="channel">Channel</label>
           <Field type="text" id="channel" name="channel" />
           <ErrorMessage name="channel" />
+        </div>
+
+        <div>
+          <label htmlFor="comments">Comments</label>
+          <Field as="textarea" type="text" id="comments" name="comments" />
+          <ErrorMessage name="comments" />
         </div>
 
         <button type="submit">Submit</button>
