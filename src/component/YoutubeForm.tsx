@@ -439,11 +439,53 @@ const onSubmit = (values: FromFields) => {
  *    a blur event.
  */
 
+/**
+ * Lecture - 25
+ * Thus, there are two way to specify the validation rules for our entire form.
+ * 1) We pass in a custom validation function using validate props.
+ * 2) We specify the yup object schema using the validationSchema props.
+ *
+ * And both of these props are available on the top level Formik Component.
+ *
+ * But it turns out formik also allow us to specify a validation function
+ * at a field level.
+ *
+ * Scenario
+ * Add a required field validation against fourth field i.e. comments
+ * using field level validation function.
+ *
+ * Specifying validation rule at a field level is very similar to the
+ * custom validate function we had in OldYoutubeForm.tsx
+ *
+ * Steps
+ * 1) We need to define a validate function that works only for the
+ *    comments field.
+ * 2) On Field Component for comments, we can pass in the validate props and
+ *    assign the validation function (in our case validateComments).
+ *
+ * Why we use Field level validation over form level validation??
+ * One possibe use case would be that we need to render our fields based
+ * on the json that we fetch from the api call.
+ * Once we get the JSON representation of our form, we iterate over the
+ * different objects building the validation function in each iteration
+ * and assign it to validate props of Field or FastField component.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
   channel: Yup.string().required("Required"),
 });
+
+//This method will automatically receive the value of the comment field
+//or the field in which it is present
+const validateComments = (value: string) => {
+  let error;
+  if (!value) {
+    error = "Required";
+  }
+  return error;
+};
 
 const YoutubeForm = () => {
   return (
@@ -477,8 +519,14 @@ const YoutubeForm = () => {
 
         <div>
           <label htmlFor="comments">Comments</label>
-          <Field as="textarea" type="text" id="comments" name="comments" />
-          <ErrorMessage name="comments" />
+          <Field
+            as="textarea"
+            type="text"
+            id="comments"
+            name="comments"
+            validate={validateComments}
+          />
+          <ErrorMessage name="comments" component={TextError} />
         </div>
 
         <div>
