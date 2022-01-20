@@ -1,7 +1,14 @@
 import React from "react";
 import "../App.css";
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  FieldArray,
+  FieldArrayRenderProps,
+} from "formik";
 import * as Yup from "yup";
 import { TextError } from "./TextError";
 
@@ -82,6 +89,7 @@ const initialValues = {
     twitter: "",
   },
   phoneNumbers: ["", ""],
+  phNumbers: [""],
 };
 
 const onSubmit = (values: FromFields) => {
@@ -315,6 +323,52 @@ const onSubmit = (values: FromFields) => {
  * 2) Add the JSX.
  */
 
+/**
+ * Lecture -22
+ * FieldArray Component
+ * This component helps with a common scenario namely dynamic form controls.
+ * Generally though, FieldArray Component help us with common array or
+ * list manipulations.
+ *
+ * Typically, collecting multiple phoneNumbers or multiple addresses
+ * is handled through dynamic form controls.
+ * i.e. To begin with we only render one field for the user to enter
+ * their phoneNumber, we then give them the option to add or provide
+ * more numbers if they wish to.
+ * List of phoneNumbers would be managed as an array in our form state.
+ *
+ * Scenario
+ * Implement a dynamic form control to collect the users phone numbers
+ * using the FieldArray Component.
+ *
+ * Steps
+ * 1) Import FieldArray from formik.
+ * 2) We need to add a new property to our initialValues object.
+ *    (In our case phNumbers), It will be an array with one empty string.
+ *    Since, we start off by asking for just phone number. so only one
+ *    value to begin with.
+ * 3) Add JSX.
+ *    3.1) Add div tag and label.
+ *    3.2) with previous implementation, after the label we have the field component.
+ *         But now, since we are working with a list of form
+ *         fields that are dynamic.We will use the FieldArray Component.
+ *
+ *          To the FieldArray Component, we have to specif the name props
+ *          just like the Field Component.
+ *
+ *          In case of FieldArray Component, the name props will be equal
+ *          to the propert that is specified in the initial values object.
+ *
+ *    3.3) To be in control of this dynamic form, we need to use the
+ *          render props pattern for this FieldArray Component.
+ *
+ *        In the fieldArrayProps object, (In our case) we are
+ *        interested in two functions and one property.
+ *        1) push() -> To add a new phone number
+ *        2) remove() -> use to remove an existing phone number.
+ *        3) values property -> need this to render our JSX.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -389,6 +443,43 @@ const YoutubeForm = () => {
         <div className="form-control">
           <label htmlFor="secondaryPh">Secondary Phone Number</label>
           <Field type="text" id="secondaryPh" name="phoneNumbers[1]" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="">List of Phone Numbers</label>
+          <FieldArray name="phNumbers">
+            {(fieldArrayProps: FieldArrayRenderProps) => {
+              console.log("fieldArrayProps", fieldArrayProps);
+              const { push, remove, form } = fieldArrayProps;
+              const { values } = form;
+              const { phNumbers } = values;
+              // Iterate through this pNumbers array and render a Field
+              // component for each value in that array.
+              return (
+                <div>
+                  {phNumbers.map((phNumber: string, index: number) => (
+                    <div key={index}>
+                      <Field name={`phNumbers[${index}]`} />
+                      {/* we also need buttons for user to add or remove 
+                      the fields dynamically 
+                      and for the click handler of this button, we will make use of remove and push functions*/}
+
+                      {/* we are disabling remove button from first input */}
+                      {index > 0 && (
+                        <button type="button" onClick={() => remove(index)}>
+                          -
+                        </button>
+                      )}
+
+                      <button type="button" onClick={() => push("")}>
+                        +
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
+          </FieldArray>
         </div>
 
         <button type="submit">Submit</button>
