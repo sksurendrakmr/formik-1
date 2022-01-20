@@ -81,6 +81,7 @@ const initialValues = {
     facebook: "",
     twitter: "",
   },
+  phoneNumbers: ["", ""],
 };
 
 const onSubmit = (values: FromFields) => {
@@ -297,6 +298,23 @@ const onSubmit = (values: FromFields) => {
  *
  */
 
+/**
+ * Lecture - 21
+ * Managing a field state as an array.
+ *
+ * Scenario
+ * We need to collect the users phone number.
+ * We want to collect their primary and secondary phoneNo.
+ * But when storing the data, we don't need any clear distinction.
+ * We just want them store it as an array of phone numbers under the same label.
+ *
+ *
+ * Steps
+ * 1) We need to add a property to our initialValues object.
+ * (In our case, intialValue is going to be an array with two empty strings)
+ * 2) Add the JSX.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -362,6 +380,15 @@ const YoutubeForm = () => {
         <div className="form-control">
           <label htmlFor="twitter">Twitter Profile</label>
           <Field type="text" id="twitter" name="social.twitter" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="primaryPh">Primary Phone Number</label>
+          <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="secondaryPh">Secondary Phone Number</label>
+          <Field type="text" id="secondaryPh" name="phoneNumbers[1]" />
         </div>
 
         <button type="submit">Submit</button>
