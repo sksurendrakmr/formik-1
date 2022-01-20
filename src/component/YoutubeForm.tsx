@@ -395,6 +395,50 @@ const onSubmit = (values: FromFields) => {
  * fields in our form then we can use FastField component.
  */
 
+/**
+ * Lecture-24
+ * When does validation run??
+ *
+ * What we know so far is that, once the validation rules are run,
+ * formik auto populates the formik.errors object with the error messages.
+ *
+ * In this lecture, we can use that to monitor when exactly validation runs.
+ *
+ * Different scenarios in which this errors object gets populated.
+ *1) When a change event has occured.
+     i.e. formik runs validation after any change event in the form. 
+ *
+ *2)Formik runs validation after any blur event in the form. 
+ * 
+ * 
+ * 3)Whenever the form submission is attempted, formik runs the validation.
+ *  If the validation doesn't pass for all the fields, onSubmit Handler never
+ *  gets executed. 
+ * 
+ *  Thus, we don't have to worry about manually handling form submission
+ *  if all the validation rules pass. Formik will take care of that for us.
+ * 
+ * Summary
+ * onChange, onBlur and attempt to submit the form, these are the three cases
+ * in which validation will be run.
+ * 
+ * But based on the complexity of our form or even just to meet 
+ * our application requirement, sometimes we might not want formik to
+ * automatically run the validation function for us.
+ * 
+ * So Formik provides two props to control the first two scenarios
+ * i.e. onChange and onBlur.
+ * 
+ * Two Props are
+ * 1) validateOnChange -> set it to false
+ *    This will instruct formik to not run the validation function on 
+ *    a change event.
+ * 
+ * 2) validateOnBlue -> set it to false
+ *    This will instruct formik to not run the validation function on 
+ *    a blur event.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -407,6 +451,8 @@ const YoutubeForm = () => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      validateOnChange={false}
+      validateOnBlur={false}
     >
       <Form>
         <label htmlFor="name">Name</label>
