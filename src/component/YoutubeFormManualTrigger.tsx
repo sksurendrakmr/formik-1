@@ -80,6 +80,33 @@ import { TextError } from "./TextError";
  * never be the same values as the initial values object then we can stick to this approach.
  */
 
+/**
+ * Lecture 28
+ * Disabling submit button in progress
+ *
+ * To acheive this, we can make use of a property of formik props object.
+ * isSubmitting -> a boolean property which formik is set to true
+ *                 if a form submission has been attempted.
+ *
+ * So All we have to do is check if isSubmitting is true and if it is then
+ * disabled the submit button.
+ *
+ * By default, if we click submittton, formik will automatically set
+ * isSubmitting to true and that would disable the submit button.
+ * Once the validation completes if at all there were errors,
+ * formik will automatically set isSubmitting to false and that is
+ * the reason the submit button is enabled again.
+ *
+ * If we submit the form with valid data, the data will be submitted but
+ * submit button will be still disabled and this is an intended behaviour
+ * because formik doesn't know when our API is going to respond back.
+ *
+ * So we have to manually set isSubmitting to false again and
+ * the way to do that is in the onSubmit method.
+ *
+ * onSubmit recieve second props / arguments
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -108,8 +135,9 @@ const initialValues = {
   phNumbers: [""],
 };
 
-const onSubmit = (values: any) => {
+const onSubmit = (values: any, onSubmitProps: any) => {
   console.log("Form data", values);
+  onSubmitProps.setSubmitting(false); //update isSubmitting to false which will in turn enable the submit button
 };
 export const YoutubeFormManualTrigger = () => {
   return (
@@ -263,7 +291,10 @@ export const YoutubeFormManualTrigger = () => {
             </button>
             {/* Now we are telling formik to disable the submit button if
              the user has changed any field value and the form is not in a valid state */}
-            <button type="submit" disabled={!(formik.isValid && formik.dirty)}>
+            <button
+              type="submit"
+              disabled={!formik.isValid || formik.isSubmitting}
+            >
               Submit
             </button>
           </Form>
