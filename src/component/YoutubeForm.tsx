@@ -8,6 +8,7 @@ import {
   ErrorMessage,
   FieldArray,
   FieldArrayRenderProps,
+  FastField,
 } from "formik";
 import * as Yup from "yup";
 import { TextError } from "./TextError";
@@ -369,6 +370,31 @@ const onSubmit = (values: FromFields) => {
  *        3) values property -> need this to render our JSX.
  */
 
+/**
+ * Lecture -23
+ * FastField Component
+ * This component is mainly meant for performance optimization.
+ * This component worth considering if our form has more than
+ * 30 fields or if there are fields with very complex validation
+ * requirement.
+ *
+ * There are also some warning regarding the useage of FastField component.
+ *
+ * By default, change in form state is causing all the fields in our form
+ * to re-render.
+ * So if we are typing something in any of the field, it will cause
+ * all field re-render
+ *
+ * Difference between FastField Component and Field Component?
+ * FastField is the optimized version of the field component which
+ * internally implements the shouldComponentUpdate lifecycle method to
+ * block all additional re-renders unless there are direct update to
+ * the fastField form control itself.
+ *
+ * So, if we observe a particular field is independent of all other
+ * fields in our form then we can use FastField component.
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -411,7 +437,9 @@ const YoutubeForm = () => {
 
         <div>
           <label htmlFor="address">Address</label>
-          <Field type="text" id="address" name="address">
+          {/* With FastField component, the log will not render until we 
+          change the state of address field. */}
+          <FastField type="text" id="address" name="address">
             {(props: any) => {
               console.log(props);
               // this funtion will return JSX, in our case an input element for address
@@ -423,7 +451,7 @@ const YoutubeForm = () => {
                 </div>
               );
             }}
-          </Field>
+          </FastField>
           <ErrorMessage name="address" />
         </div>
 
