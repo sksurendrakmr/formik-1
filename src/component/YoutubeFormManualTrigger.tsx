@@ -33,6 +33,46 @@ import { TextError } from "./TextError";
  *
  */
 
+/**
+ * Lecture - 27
+ *  Most common scenario where we want submit button to be disable :-
+ * 1) validity of the form state
+ * 2) Form submission in progress
+ *
+ * Scenario 1
+ * We want submit button to be disabled if the form state is invalid.
+ *
+ * To implement this functionality, we need to understand some
+ * properties in the formik props object.
+ *
+ * 1) isValid -> it's a read only property that is set to true if
+ *               the errors object is empty.
+ *
+ * Thus, isValid is a property that lets us know if the form has
+ * no errors at any given time. So we can use this property to disable
+ * the submit button.
+ *
+ * Even after making the changes in submit button, we will observe the submit
+ * button is not disabled.
+ * Since when page load, errors object will be empty so isValid will be true.
+ *
+ * There are two ways to solve this :
+ * 1) Add validateOnmount props on the Fromik component and set it to true.
+ *
+ * On page load as soon as the form mounts on the DOM, formik will run the validation
+ * against each fields and populate the errors object.
+ *
+ * Drawback of this approach
+ * If we have a form with 20 or 30 fields with complex validation,
+ * It really doesn't make sense to run all the validation rules even
+ * before the user typed in a single letter.
+ *
+ * So this approach of using validateOnMount is suitable for a form with
+ * very few fields with simple validations.
+ *
+ *
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -70,6 +110,7 @@ export const YoutubeFormManualTrigger = () => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      validateOnMount
     >
       {/* with formik props, we can control everything that has to do with our form */}
       {(formik) => {
@@ -214,7 +255,9 @@ export const YoutubeFormManualTrigger = () => {
             >
               Visit all fields
             </button>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={!formik.isValid}>
+              Submit
+            </button>
           </Form>
         );
       }}
