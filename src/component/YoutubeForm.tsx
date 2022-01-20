@@ -77,6 +77,10 @@ const initialValues = {
   channel: "",
   comments: "",
   address: "",
+  social: {
+    facebook: "",
+    twitter: "",
+  },
 };
 
 const onSubmit = (values: FromFields) => {
@@ -269,6 +273,30 @@ const onSubmit = (values: FromFields) => {
  * An alternative of this is to use renderProps pattern.
  */
 
+/**
+ * Lecture - 20
+ * Sometimes, we might want / need to group together some data into
+ * its own separate object.
+ * The reason could be that the API accepts the data in such a manner
+ * or the database stores the data in particular format.
+ *
+ * Thus, we want to group together some of the fields in our form
+ * for that we can make use of nested object.
+ *
+ * Scenario
+ * The youtube form should also collect information about the social
+ * presence that the user has. So the form will ask the user for their
+ * facebook and twitter profiles.
+ * Since they are related, we want them to be grouped and stored
+ * as the nested object.
+ *
+ * Steps
+ * 1)On the initialValues object, we are going to specify a property,
+ *   (in our case called social) which is an object.
+ * 2) Add the form Fields in our JSX.
+ *
+ */
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email format").required("Required"),
@@ -325,6 +353,15 @@ const YoutubeForm = () => {
             }}
           </Field>
           <ErrorMessage name="address" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook Profile</label>
+          <Field type="text" id="facebook" name="social.facebook" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter Profile</label>
+          <Field type="text" id="twitter" name="social.twitter" />
         </div>
 
         <button type="submit">Submit</button>
