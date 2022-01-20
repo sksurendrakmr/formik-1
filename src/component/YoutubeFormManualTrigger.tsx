@@ -70,7 +70,14 @@ import { TextError } from "./TextError";
  * So this approach of using validateOnMount is suitable for a form with
  * very few fields with simple validations.
  *
+ *Other approach
+ * We will use another property present in the formik props object.
+ * dirty ->  boolean value which indicated if at least one of the form
+ *           fields value has changed since it was initialized.
  *
+ * This approach will only work if on page load, the form field will always invalid.
+ * If we know for a fact the user will interact with our form and enter values which will
+ * never be the same values as the initial values object then we can stick to this approach.
  */
 
 const validationSchema = Yup.object({
@@ -110,7 +117,6 @@ export const YoutubeFormManualTrigger = () => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
-      validateOnMount
     >
       {/* with formik props, we can control everything that has to do with our form */}
       {(formik) => {
@@ -255,7 +261,9 @@ export const YoutubeFormManualTrigger = () => {
             >
               Visit all fields
             </button>
-            <button type="submit" disabled={!formik.isValid}>
+            {/* Now we are telling formik to disable the submit button if
+             the user has changed any field value and the form is not in a valid state */}
+            <button type="submit" disabled={!(formik.isValid && formik.dirty)}>
               Submit
             </button>
           </Form>
