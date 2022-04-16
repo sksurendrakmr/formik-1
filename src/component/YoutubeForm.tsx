@@ -9,6 +9,7 @@ import {
   FieldArray,
   FieldArrayRenderProps,
   FastField,
+  FormikHelpers,
 } from "formik";
 import * as Yup from "yup";
 import { TextError } from "./TextError";
@@ -122,8 +123,9 @@ const savedValues: FormValues = {
   phNumbers: [""],
 };
 
-const onSubmit = (values: FromFields) => {
+const onSubmit = (values: FromFields, onSubmitProps: any) => {
   console.log("Form data", values);
+  onSubmitProps.resetForm();
 };
 
 /**
@@ -521,6 +523,16 @@ const onSubmit = (values: FromFields) => {
  * step-5 - add enableReinitialize in formik component.
  *          This props is important because it decides whether form can change
  *          initalValues after the form has been intialized once.
+ *
+ * Lecture - 30
+ * How to reset the form data??
+ * Reseting the form data is basically setting the form values to the
+ * initial values object.
+ * There are two scenarios of handling form reset
+ * 1. Reset the form data with reset button
+ * 2. Reseting the form data after the form submission has completed
+ *    To handle this scenario we use the sumbitProps in onSubmit method
+ *
  */
 
 const validationSchema = Yup.object({
@@ -660,6 +672,8 @@ const YoutubeForm = () => {
         <button type="button" onClick={() => setFormValues(savedValues)}>
           Load saved data
         </button>
+        {/* Scenario-1 */}
+        <button type="reset">Reset</button>
         <button type="submit">Submit</button>
       </Form>
     </Formik>
