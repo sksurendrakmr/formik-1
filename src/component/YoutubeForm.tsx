@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
 
 import {
@@ -79,12 +79,41 @@ type FromFields = {
   channel: string;
 };
 
-const initialValues = {
+type FormValues = {
+  name: string;
+  email: string;
+  channel: string;
+  comments: string;
+  address: string;
+  social: {
+    facebook: string;
+    twitter: string;
+  };
+  phoneNumbers: [string, string];
+  phNumbers: string[];
+};
+
+const initialValues: FormValues = {
   name: "",
   email: "",
   channel: "",
   comments: "",
   address: "",
+  social: {
+    facebook: "",
+    twitter: "",
+  },
+  phoneNumbers: ["", ""],
+  phNumbers: [""],
+};
+
+//step-1
+const savedValues: FormValues = {
+  name: "Sk",
+  email: "v@gmail.com",
+  channel: "sks",
+  comments: "welcome",
+  address: "ny",
   social: {
     facebook: "",
     twitter: "",
@@ -469,6 +498,29 @@ const onSubmit = (values: FromFields) => {
  * Once we get the JSON representation of our form, we iterate over the
  * different objects building the validation function in each iteration
  * and assign it to validate props of Field or FastField component.
+ *
+ * Lecture -29
+ * How to load saved data back to our form.
+ * so user can save the progress and come back at later time
+ * and continue filing their form.
+ *
+ * Here, apart from redering the form, we need to fetch the saved data and fill
+ * those values into our form.
+ *
+ * Step-1 define saved data object. Has to be of the same structure as the
+ *        initial values object.
+ *
+ * step-2 - add a button to load the save data.
+ *          on click of this button, change formik from reading initial values
+ *          to reading saved values.
+ *
+ * step-3 - add onClick event
+ *
+ * step-4 - change the value for initialValues props on the formik component
+ *
+ * step-5 - add enableReinitialize in formik component.
+ *          This props is important because it decides whether form can change
+ *          initalValues after the form has been intialized once.
  */
 
 const validationSchema = Yup.object({
@@ -488,13 +540,15 @@ const validateComments = (value: string) => {
 };
 
 const YoutubeForm = () => {
+  const [formValues, setFormValues] = useState<FormValues | null>(null);
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={formValues || initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
       validateOnChange={false}
       validateOnBlur={false}
+      enableReinitialize
     >
       <Form>
         <label htmlFor="name">Name</label>
@@ -603,7 +657,9 @@ const YoutubeForm = () => {
             }}
           </FieldArray>
         </div>
-
+        <button type="button" onClick={() => setFormValues(savedValues)}>
+          Load saved data
+        </button>
         <button type="submit">Submit</button>
       </Form>
     </Formik>
